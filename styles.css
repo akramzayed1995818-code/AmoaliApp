@@ -1,0 +1,577 @@
+/* CSS Variables */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --sidebar-width: 250px;
+    --header-height: 60px;
+    --footer-height: 40px;
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    direction: rtl;
+    text-align: right;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 15px 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.badge {
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-weight: 500;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    background-color: #fff;
+    min-height: 100vh;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: var(--sidebar-width);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link {
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 0;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+    border-right: 3px solid var(--primary-color);
+}
+
+.sidebar .nav-link i {
+    margin-left: 10px;
+    font-size: 1.1rem;
+}
+
+.sidebar .p-3 {
+    padding: 20px !important;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar .p-3 h4 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+.sidebar .p-3 p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.user-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+.badge-user {
+    background-color: #6c757d;
+    color: white;
+}
+
+.badge-admin {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-right: var(--sidebar-width);
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+.page-content {
+    display: none;
+}
+
+.page-content.active {
+    display: block;
+}
+
+/* Mobile Menu Button */
+#menuToggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1001;
+    border-radius: 8px;
+}
+
+/* Sidebar Overlay for Mobile */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 767.98px) {
+    .sidebar {
+        transform: translateX(100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+    
+    .main-content {
+        margin-right: 0;
+    }
+    
+    .admin-only {
+        display: none;
+    }
+}
+
+/* Dashboard Styles */
+.indicator-card, .balance-card, .stats-card {
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.indicator-card {
+    background-color: #fff;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stats-card {
+    background-color: #fff;
+}
+
+.indicator-title, .balance-card h5, .stats-card p {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    opacity: 0.8;
+}
+
+.indicator-value, .balance-card h3, .stats-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.indicator-icon, .stats-card i {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.wealth-indicator {
+    border-right: 4px solid #6f42c1;
+}
+
+.bank-yemen-indicator {
+    border-right: 4px solid #0d6efd;
+}
+
+.bank-saudi-indicator {
+    border-right: 4px solid #198754;
+}
+
+.cash-yemen-indicator {
+    border-right: 4px solid #ffc107;
+}
+
+.cash-saudi-indicator {
+    border-right: 4px solid #fd7e14;
+}
+
+.debt-indicator {
+    border-right: 4px solid #dc3545;
+}
+
+.positive-indicator {
+    color: var(--success-color);
+}
+
+.negative-indicator {
+    color: var(--danger-color);
+}
+
+.currency-yemen {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.currency-saudi {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Transaction Styles */
+.transaction-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-amount {
+    font-weight: 700;
+    margin-left: 10px;
+}
+
+.transaction-amount.income {
+    color: var(--success-color);
+}
+
+.transaction-amount.expense {
+    color: var(--danger-color);
+}
+
+.account-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+}
+
+.badge-bank {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.badge-cash {
+    background-color: #198754;
+    color: white;
+}
+
+.badge-debt {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Category Styles */
+.category-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-item:last-child {
+    border-bottom: none;
+}
+
+.category-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: 15px;
+}
+
+/* Debt Customer Styles */
+.debt-customer-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.debt-customer-header {
+    margin-bottom: 15px;
+}
+
+.debt-customer-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.debt-customer-contact {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.debt-customer-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.debt-balance-positive {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.debt-balance-negative {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.debt-balance-net {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.debt-customer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Chart Styles */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Filter Section Styles */
+.filter-section {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+}
+
+.modal-header {
+    border-bottom: 1px solid #eee;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Toast Styles */
+.custom-toast {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    min-width: 300px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s, transform 0.3s;
+    position: relative;
+    z-index: 1050;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1050;
+}
+
+.toast-icon {
+    margin-left: 15px;
+    font-size: 1.5rem;
+}
+
+.toast-success .toast-icon {
+    color: var(--success-color);
+}
+
+.toast-error .toast-icon {
+    color: var(--danger-color);
+}
+
+.toast-info .toast-icon {
+    color: var(--info-color);
+}
+
+/* Form Styles */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button Styles */
+.btn-custom {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+/* Debt Customer Details Modal Styles */
+.debt-customer-details {
+    padding: 10px;
+}
+
+.debt-customer-summary {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.debt-summary-item {
+    text-align: center;
+}
+
+.debt-summary-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.debt-summary-label {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.debt-details-section {
+    margin-bottom: 20px;
+}
+
+.debt-details-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.debt-details-content {
+    padding: 10px;
+}
+
+/* Permission Item Styles */
+.permission-item {
+    margin-bottom: 10px;
+}

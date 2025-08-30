@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="إدارة أموالي">
+    <meta name="theme-color" content="#0d6efd">
+    <title>إدارة أموالي - نظام متكامل</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="إدارة أموالي">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+    
+    <!-- Main App -->
+    <div id="main-app" class="container-fluid d-none">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0" id="sidebar">
+                <div class="p-3 text-center">
+                    <h4><i class="bi bi-wallet2"></i> إدارة أموالي</h4>
+                    <p class="mb-0 small">مرحباً بك، <span id="currentUser">المستخدم</span></p>
+                    <p class="mb-0 small"><span id="userRole" class="user-badge badge-user">مستخدم</span></p>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" data-page="dashboard">
+                        <i class="bi bi-speedometer2"></i> لوحة التحكم
+                    </a>
+                    <a class="nav-link" href="#" data-page="accounts">
+                        <i class="bi bi-piggy-bank"></i> الحسابات
+                    </a>
+                    <a class="nav-link" href="#" data-page="transactions">
+                        <i class="bi bi-arrow-left-right"></i> التحويلات
+                    </a>
+                    <a class="nav-link" href="#" data-page="income">
+                        <i class="bi bi-plus-circle"></i> الإيرادات
+                    </a>
+                    <a class="nav-link" href="#" data-page="expenses">
+                        <i class="bi bi-dash-circle"></i> المصروفات
+                    </a>
+                    <a class="nav-link" href="#" data-page="debts">
+                        <i class="bi bi-cash-stack"></i> المديونية
+                    </a>
+                    <a class="nav-link" href="#" data-page="categories">
+                        <i class="bi bi-tags"></i> التصنيفات
+                    </a>
+                    <a class="nav-link admin-only" href="#" data-page="reports">
+                        <i class="bi bi-graph-up"></i> التقارير
+                    </a>
+                    <a class="nav-link admin-only" href="#" data-page="users">
+                        <i class="bi bi-people"></i> المستخدمون
+                    </a>
+                    <a class="nav-link admin-only" href="#" data-page="backup">
+                        <i class="bi bi-cloud-arrow-down"></i> النسخ الاحتياطي
+                    </a>
+                    <a class="nav-link" href="#" data-page="settings">
+                        <i class="bi bi-gear"></i> الإعدادات
+                    </a>
+                    <a class="nav-link" href="#" id="logoutLink">
+                        <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Mobile Menu Button -->
+                <button class="btn btn-primary d-md-none mb-3" id="menuToggle">
+                    <i class="bi bi-list"></i> القائمة
+                </button>
+                
+                <!-- Dashboard Page -->
+                <div id="dashboard-page" class="page-content active">
+                    <h2 class="mb-4">لوحة التحكم</h2>
+                    
+                    <!-- Financial Indicators -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="indicator-card wealth-indicator">
+                                <div>
+                                    <div class="indicator-title">إجمالي الثروة</div>
+                                    <div class="indicator-value" id="totalWealthIndicator">0 <span class="currency-yemen">YER</span></div>
+                                </div>
+                                <div class="indicator-icon">
+                                    <i class="bi bi-piggy-bank-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="indicator-card bank-yemen-indicator">
+                                <div>
+                                    <div class="indicator-title">الرصيد البنكي (ريال يمني)</div>
+                                    <div class="indicator-value" id="totalBankYERIndicator">0 <span class="currency-yemen">YER</span></div>
+                                </div>
+                                <div class="indicator-icon">
+                                    <i class="bi bi-bank"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="indicator-card bank-saudi-indicator">
+                                <div>
+                                    <div class="indicator-title">الرصيد البنكي (ريال سعودي)</div>
+                                    <div class="indicator-value" id="totalBankSARIndicator">0 <span class="currency-saudi">SAR</span></div>
+                                </div>
+                                <div class="indicator-icon">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="indicator-card cash-yemen-indicator">
+                                <div>
+                                    <div class="indicator-title">الرصيد النقدي (ريال يمني)</div>
+                                    <div class="indicator-value" id="totalCashYERIndicator">0 <span class="currency-yemen">YER</span></div>
+                                </div>
+                                <div class="indicator-icon">
+                                    <i class="bi bi-cash"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="indicator-card cash-saudi-indicator">
+                                <div>
+                                    <div class="indicator-title">الرصيد النقدي (ريال سعودي)</div>
+                                    <div class="indicator-value" id="totalCashSARIndicator">0 <span class="currency-saudi">SAR</span></div>
+                                </div>
+                                <div class="indicator-icon">
+                                    <i class="bi bi-coin"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="indicator-card debt-indicator">
+                                <div>
+                                    <div class="indicator-title">إجمالي المديونية</div>
+                                    <div class="indicator-value" id="totalDebtIndicator">
+                                        <span id="debtAmount">0</span> <span class="currency-yemen">YER</span>
+                                        <span id="debtSign" class="ms-2"></span>
+                                    </div>
+                                </div>
+                                <div class="indicator-icon">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wealth Chart -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">تطور الثروة</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="wealthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Balance Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="balance-card">
+                                <h5><i class="bi bi-wallet-fill"></i> الرصيد الإجمالي (ريال يمني)</h5>
+                                <h3 id="totalBalanceYER">0 <span class="currency-yemen">YER</span></h3>
+                                <p>آخر تحديث: اليوم</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="balance-card">
+                                <h5><i class="bi bi-wallet-fill"></i> الرصيد الإجمالي (ريال سعودي)</h5>
+                                <h3 id="totalBalanceSAR">0 <span class="currency-saudi">SAR</span></h3>
+                                <p>آخر تحديث: اليوم</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-arrow-down-circle text-success fs-1"></i>
+                                <h3 id="totalIncome">0 <span class="currency-yemen">YER</span></h3>
+                                <p>إجمالي الإيرادات</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-arrow-up-circle text-danger fs-1"></i>
+                                <h3 id="totalExpenses">0 <span class="currency-yemen">YER</span></h3>
+                                <p>إجمالي المصروفات</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-piggy-bank text-primary fs-1"></i>
+                                <h3 id="totalSavings">0 <span class="currency-yemen">YER</span></h3>
+                                <p>المدخرات</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-cash-stack text-warning fs-1"></i>
+                                <h3 id="totalDebts">0 <span class="currency-yemen">YER</span></h3>
+                                <p>إجمالي المديونية</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Transactions -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">آخر التحويلات</h5>
+                            <a href="#" class="btn btn-sm btn-outline-primary" data-page="transactions">عرض الكل</a>
+                        </div>
+                        <div class="card-body p-0" id="recentTransactionsList">
+                            <!-- Transactions will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Section -->
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">توزيع المصروفات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="expenseChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">تطور الرصيد الشهري</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="balanceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Categories Page -->
+                <div id="categories-page" class="page-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>إدارة التصنيفات</h2>
+                    </div>
+                    
+                    <!-- Income Categories -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">تصنيفات الإيرادات</h5>
+                            <button class="btn btn-primary btn-custom" id="addIncomeCategoryBtn">
+                                <i class="bi bi-plus-circle"></i> إضافة تصنيف
+                            </button>
+                        </div>
+                        <div class="card-body p-0" id="incomeCategoriesList">
+                            <!-- Income categories will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Expense Categories -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">تصنيفات المصروفات</h5>
+                            <button class="btn btn-primary btn-custom" id="addExpenseCategoryBtn">
+                                <i class="bi bi-plus-circle"></i> إضافة تصنيف
+                            </button>
+                        </div>
+                        <div class="card-body p-0" id="expenseCategoriesList">
+                            <!-- Expense categories will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Users Page -->
+                <div id="users-page" class="page-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>المستخدمون</h2>
+                        <button class="btn btn-primary btn-custom" id="addUserBtn">
+                            <i class="bi bi-plus-circle"></i> إضافة مستخدم
+                        </button>
+                    </div>
+                    <!-- Users List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">قائمة المستخدمين</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>اسم المستخدم</th>
+                                            <th>البريد الإلكتروني</th>
+                                            <th>الدور</th>
+                                            <th>الحالة</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <!-- Users will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Backup Page -->
+                <div id="backup-page" class="page-content">
+                    <h2 class="mb-4">النسخ الاحتياطي</h2>
+                    <!-- Backup Settings -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">إعدادات النسخ الاحتياطي</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">تفعيل النسخ الاحتياطي التلقائي</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+                                        <label class="form-check-label" for="autoBackup">تفعيل النسخ الاحتياطي اليومي التلقائي</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">وقت النسخ الاحتياطي</label>
+                                    <select class="form-select" id="backupTime">
+                                        <option selected>12:00 ص</option>
+                                        <option>3:00 ص</option>
+                                        <option>6:00 ص</option>
+                                        <option>9:00 ص</option>
+                                        <option>12:00 م</option>
+                                        <option>3:00 م</option>
+                                        <option>6:00 م</option>
+                                        <option>9:00 م</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">مكان حفظ النسخ الاحتياطي</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="backupLocation" id="localBackup" checked>
+                                        <label class="form-check-label" for="localBackup">التخزين المحلي (الهاتف)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="backupLocation" id="cloudBackup">
+                                        <label class="form-check-label" for="cloudBackup">التخزين السحابي</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">حفظ الإعدادات</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Backup Status -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">حالة النسخ الاحتياطي</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="backup-status">
+                                <div>
+                                    <div class="fw-bold">النسخ الاحتياطي الأخير</div>
+                                    <small class="text-muted">اليوم، 12:00 ص</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">مكتمل</span>
+                                </div>
+                            </div>
+                            <div class="backup-status">
+                                <div>
+                                    <div class="fw-bold">النسخ الاحتياطي التالي</div>
+                                    <small class="text-muted">غداً، 12:00 ص</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-info">مجدول</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Backup Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">إجراءات النسخ الاحتياطي</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" id="createBackupBtn">
+                                    <i class="bi bi-download"></i> إنشاء نسخة احتياطية الآن
+                                </button>
+                                <button class="btn btn-outline-secondary" id="restoreBackupBtn">
+                                    <i class="bi bi-upload"></i> استعادة نسخة احتياطية
+                                </button>
+                                <button class="btn btn-outline-danger" id="deleteBackupBtn">
+                                    <i class="bi bi-trash"></i> حذف النسخ الاحتياطية القديمة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accounts Page -->
+                <div id="accounts-page" class="page-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>الحسابات</h2>
+                        <button class="btn btn-primary btn-custom" id="addAccountBtn">
+                            <i class="bi bi-plus-circle"></i> إضافة حساب
+                        </button>
+                    </div>
+                    <!-- Bank Accounts -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">الحسابات البنكية</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>اسم البنك</th>
+                                            <th>نوع الحساب</th>
+                                            <th>الرصيد (ريال يمني)</th>
+                                            <th>الرصيد (ريال سعودي)</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bank-accounts-table-body">
+                                        <!-- Bank accounts will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cash Accounts -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">الحسابات النقدية</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>المكان</th>
+                                            <th>الرصيد (ريال يمني)</th>
+                                            <th>الرصيد (ريال سعودي)</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cash-accounts-table-body">
+                                        <!-- Cash accounts will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transactions Page -->
+                <div id="transactions-page" class="page-content">
+                    <h2 class="mb-4">التحويلات</h2>
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">نوع المعاملة</label>
+                                <select class="form-select" id="transactionFilterType">
+                                    <option selected>الكل</option>
+                                    <option>تحويلات</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">الحساب</label>
+                                <select class="form-select" id="transactionFilterAccount">
+                                    <option selected>جميع الحسابات</option>
+                                    <!-- Accounts will be dynamically added here -->
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">العملة</label>
+                                <select class="form-select" id="transactionFilterCurrency">
+                                    <option selected>الكل</option>
+                                    <option>ريال يمني</option>
+                                    <option>ريال سعودي</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">الفترة</label>
+                                <select class="form-select" id="transactionFilterPeriod">
+                                    <option selected>هذا الشهر</option>
+                                    <option>الشهر الماضي</option>
+                                    <option>آخر 3 أشهر</option>
+                                    <option>هذه السنة</option>
+                                    <option>تاريخ محدد</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Transactions List -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">قائمة التحويلات</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-secondary me-2" id="exportToExcelBtn"><i class="bi bi-download"></i> تصدير Excel</button>
+                                <button class="btn btn-sm btn-outline-secondary me-2" id="exportToPdfBtn"><i class="bi bi-file-earmark-pdf"></i> تصدير PDF</button>
+                                <button class="btn btn-sm btn-primary" id="addTransactionBtn">
+                                    <i class="bi bi-plus-circle"></i> إضافة تحويل
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0" id="transactionsList">
+                            <!-- Transactions will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Income Page -->
+                <div id="income-page" class="page-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>الإيرادات</h2>
+                        <button class="btn btn-primary btn-custom" id="addIncomeBtn">
+                            <i class="bi bi-plus-circle"></i> إضافة إيراد
+                        </button>
+                    </div>
+                    <!-- Income Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-briefcase text-primary fs-1"></i>
+                                <h3 id="labSalary">0 <span class="currency-yemen">YER</span></h3>
+                                <p>راتب المختبرات</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-book text-info fs-1"></i>
+                                <h3 id="teachingSalary">0 <span class="currency-yemen">YER</span></h3>
+                                <p>راتب التدريس</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-laptop text-success fs-1"></i>
+                                <h3 id="freelanceIncome">0 <span class="currency-yemen">YER</span></h3>
+                                <p> عمل online</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Income List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">قائمة الإيرادات</h5>
+                        </div>
+                        <div class="card-body p-0" id="incomeList">
+                            <!-- Income items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Expenses Page -->
+                <div id="expenses-page" class="page-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>المصروفات</h2>
+                        <button class="btn btn-primary btn-custom" id="addExpenseBtn">
+                            <i class="bi bi-plus-circle"></i> إضافة مصروف
+                        </button>
+                    </div>
+                    <!-- Expense Categories -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-house-door text-primary fs-1"></i>
+                                <h3 id="rentExpense">0 <span class="currency-yemen">YER</span></h3>
+                                <p>إيجار البيت</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-cart3 text-success fs-1"></i>
+                                <h3 id="shoppingExpense">0 <span class="currency-yemen">YER</span></h3>
+                                <p> مصاريف البيت</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-lightning text-warning fs-1"></i>
+                                <h3 id="utilitiesExpense">0 <span class="currency-yemen">YER</span></h3>
+                                <p>ماء وكهرباء  </p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-heart text-danger fs-1"></i>
+                                <h3 id="marriageExpense">0 <span class="currency-yemen">YER</span></h3>
+                                <p>تكاليف الزواج</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Expense List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">قائمة المصروفات</h5>
+                        </div>
+                        <div class="card-body p-0" id="expenseList">
+                            <!-- Expense items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Debts Page -->
+                <div id="debts-page" class="page-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>إدارة المديونية</h2>
+                        <button class="btn btn-primary btn-custom" id="addDebtCustomerBtn">
+                            <i class="bi bi-plus-circle"></i> إضافة عميل جديد
+                        </button>
+                    </div>
+                    
+                    <!-- Debt Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-arrow-down-right-circle text-success fs-1"></i>
+                                <h3 id="debtsOwed">0 <span class="currency-yemen">YER</span></h3>
+                                <p>مديونية لي (مستحقة القبض)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="stats-card bg-light">
+                                <i class="bi bi-arrow-up-right-circle text-danger fs-1"></i>
+                                <h3 id="debtsOwe">0 <span class="currency-yemen">YER</span></h3>
+                                <p>مديونية عندي (مستحقة الدفع)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Debt Customers List -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">قائمة العملاء</h5>
+                        </div>
+                        <div class="card-body" id="debtCustomersList">
+                            <!-- Debt customers will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reports Page -->
+                <div id="reports-page" class="page-content">
+                    <h2 class="mb-4">التقارير</h2>
+                    <!-- Report Filters -->
+                    <div class="filter-section mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">نوع التقرير</label>
+                                <select class="form-select" id="reportType">
+                                    <option selected>تقرير مالي شامل</option>
+                                    <option>تقرير الإيرادات</option>
+                                    <option>تقرير المصروفات</option>
+                                    <option>تقرير الديون</option>
+                                    <option>تقرير الحسابات</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">الفترة</label>
+                                <select class="form-select" id="reportPeriod">
+                                    <option selected>هذا الشهر</option>
+                                    <option>الشهر الماضي</option>
+                                    <option>آخر 3 أشهر</option>
+                                    <option>هذه السنة</option>
+                                    <option>تاريخ محدد</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">العملة</label>
+                                <select class="form-select" id="reportCurrency">
+                                    <option selected>الكل</option>
+                                    <option>ريال يمني</option>
+                                    <option>ريال سعودي</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button class="btn btn-primary" id="generateReportBtn"><i class="bi bi-file-earmark-text"></i> إنشاء التقرير</button>
+                                <button class="btn btn-outline-secondary ms-2" id="downloadPdfBtn"><i class="bi bi-download"></i> تحميل PDF</button>
+                                <button class="btn btn-outline-secondary ms-2" id="downloadExcelBtn"><i class="bi bi-file-earmark-excel"></i> تحميل Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Report Charts -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">توزيع الإيرادات حسب المصدر</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="incomeSourceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">توزيع المصروفات حسب الفئة</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="expenseCategoryChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Page -->
+                <div id="settings-page" class="page-content">
+                    <h2 class="mb-4">الإعدادات</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">الملف الشخصي</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">الاسم الكامل</label>
+                                            <input type="text" class="form-control" id="profileName" value="اكرم زايد">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">البريد الإلكتروني</label>
+                                            <input type="email" class="form-control" id="profileEmail" value="dr1akram96@gmail.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">رقم الهاتف</label>
+                                            <input type="tel" class="form-control" id="profilePhone" value="+967772932757">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">العملة الافتراضية</label>
+                                            <select class="form-select" id="profileCurrency">
+                                                <option selected>ريال يمني</option>
+                                                <option>ريال سعودي</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">إعدادات العملات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">سعر الصرف (ريال سعودي / ريال يمني)</label>
+                                            <input type="number" class="form-control" id="exchangeRate" value="140" step="0.01">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">تحديث أسعار الصرف تلقائياً</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="autoUpdateRates">
+                                                <label class="form-check-label" for="autoUpdateRates">تفعيل التحديث التلقائي</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">الإشعارات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="transactionNotif" checked>
+                                                <label class="form-check-label" for="transactionNotif">إشعارات المعاملات</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="debtNotif" checked>
+                                                <label class="form-check-label" for="debtNotif">إشعارات الديون</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="balanceNotif">
+                                                <label class="form-check-label" for="balanceNotif">إشعارات الرصيد المنخفض</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">حد الرصيد المنخفض</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="lowBalanceLimit" value="0">
+                                                <span class="input-group-text">ريال يمني</span>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">تغيير كلمة المرور</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">كلمة المرور الحالية</label>
+                                            <input type="password" class="form-control" id="currentPassword">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">كلمة المرور الجديدة</label>
+                                            <input type="password" class="form-control" id="newPassword">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">تأكيد كلمة المرور الجديدة</label>
+                                            <input type="password" class="form-control" id="confirmNewPassword">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">تغيير كلمة المرور</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- All Modals -->
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">استعادة كلمة المرور</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور.</p>
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="forgotEmail" placeholder="أدخل بريدك الإلكتروني" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="sendResetLinkBtn">إرسال الرابط</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalTitle">تأكيد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="confirmModalBody">
+                    هل أنت متأكد من تنفيذ هذا الإجراء؟
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="confirmModalBtn">تأكيد</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مستخدم جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" class="form-control" id="newUsername" placeholder="أدخل اسم المستخدم" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="newUserEmail" placeholder="أدخل البريد الإلكتروني" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" id="newUserPassword" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">تأكيد كلمة المرور</label>
+                            <input type="password" class="form-control" id="confirmNewUserPassword" placeholder="أدخل كلمة المرور مرة أخرى" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">دور المستخدم</label>
+                            <select class="form-select" id="newUserRole">
+                                <option value="admin">مدير</option>
+                                <option value="user" selected>مستخدم</option>
+                                <option value="viewer">مشاهد</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الصلاحيات</label>
+                            <div class="permission-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permView" checked>
+                                    <label class="form-check-label" for="permView">عرض البيانات</label>
+                                </div>
+                            </div>
+                            <div class="permission-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permAdd" checked>
+                                    <label class="form-check-label" for="permAdd">إضافة بيانات</label>
+                                </div>
+                            </div>
+                            <div class="permission-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permEdit" checked>
+                                    <label class="form-check-label" for="permEdit">تعديل البيانات</label>
+                                </div>
+                            </div>
+                            <div class="permission-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permDelete">
+                                    <label class="form-check-label" for="permDelete">حذف البيانات</label>
+                                </div>
+                            </div>
+                            <div class="permission-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permReports">
+                                    <label class="form-check-label" for="permReports">إنشاء تقارير</label>
+                                </div>
+                            </div>
+                            <div class="permission-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permUsers">
+                                    <label class="form-check-label" for="permUsers">إدارة المستخدمين</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveNewUserBtn">حفظ المستخدم</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل مستخدم</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editUserId">
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" class="form-control" id="editUsername" placeholder="أدخل اسم المستخدم" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="editUserEmail" placeholder="أدخل البريد الإلكتروني" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" id="editUserPassword" placeholder="أدخل كلمة المرور (اتركها فارغة إذا لم ترد تغييرها)">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">دور المستخدم</label>
+                            <select class="form-select" id="editUserRole">
+                                <option value="admin">مدير</option>
+                                <option value="user">مستخدم</option>
+                                <option value="viewer">مشاهد</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الحالة</label>
+                            <select class="form-select" id="editUserStatus">
+                                <option value="active">نشط</option>
+                                <option value="inactive">غير نشط</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateUserBtn">تحديث المستخدم</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Account Modal -->
+    <div class="modal fade" id="addAccountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة حساب جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">نوع الحساب</label>
+                            <select class="form-select" id="accountType">
+                                <option selected>اختر نوع الحساب</option>
+                                <option value="bank">حساب بنكي</option>
+                                <option value="cash">حساب نقدي</option>
+                            </select>
+                        </div>
+                        
+                        <div id="bankFields" class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label">اسم البنك</label>
+                                <input type="text" class="form-control" id="bankName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">نوع الحساب البنكي</label>
+                                <select class="form-select" id="bankAccountType">
+                                    <option selected>اختر نوع الحساب</option>
+                                    <option>حساب جاري</option>
+                                    <option>حساب توفير</option>
+                                    <option>حساب استثماري</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">رقم الحساب</label>
+                                <input type="text" class="form-control" id="accountNumber">
+                            </div>
+                        </div>
+                        
+                        <div id="cashFields" class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label">مكان حفظ النقود</label>
+                                <select class="form-select" id="cashLocation">
+                                    <option selected>اختر المكان</option>
+                                    <option>لدي</option>
+                                    <option>لدى أمي</option>
+                                    <option>لدى زوجتي</option>
+                                    <option>آخر</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 d-none" id="otherLocationField">
+                                <label class="form-label">حدد المكان</label>
+                                <input type="text" class="form-control" id="otherLocation">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الرصيد الافتتاحي (ريال يمني)</label>
+                            <input type="number" class="form-control" id="openingBalanceYER" value="0">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الرصيد الافتتاحي (ريال سعودي)</label>
+                            <input type="number" class="form-control" id="openingBalanceSAR" value="0">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="accountNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveAccountBtn">حفظ الحساب</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Account Modal -->
+    <div class="modal fade" id="editAccountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل حساب</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editAccountId">
+                        <input type="hidden" id="editAccountType">
+                        
+                        <div id="editBankFields" class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label">اسم البنك</label>
+                                <input type="text" class="form-control" id="editBankName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">نوع الحساب البنكي</label>
+                                <select class="form-select" id="editBankAccountType">
+                                    <option value="current">حساب جاري</option>
+                                    <option value="savings">حساب توفير</option>
+                                    <option value="investment">حساب استثماري</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">رقم الحساب</label>
+                                <input type="text" class="form-control" id="editAccountNumber">
+                            </div>
+                        </div>
+                        
+                        <div id="editCashFields" class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label">مكان حفظ النقود</label>
+                                <select class="form-select" id="editCashLocation">
+                                    <option value="me">لدي</option>
+                                    <option value="mom">لدى أمي</option>
+                                    <option value="wife">لدى زوجتي</option>
+                                    <option value="other">آخر</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 d-none" id="editOtherLocationField">
+                                <label class="form-label">حدد المكان</label>
+                                <input type="text" class="form-control" id="editOtherLocation">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الرصيد (ريال يمني)</label>
+                            <input type="number" class="form-control" id="editAccountBalanceYER" value="0">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الرصيد (ريال سعودي)</label>
+                            <input type="number" class="form-control" id="editAccountBalanceSAR" value="0">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editAccountNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateAccountBtn">تحديث الحساب</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Transaction Modal -->
+    <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة تحويل  جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">نوع المعاملة</label>
+                            <select class="form-select" id="transactionType">
+                                <option selected>اختر نوع المعاملة</option>
+                                <option value="transfer">تحويل</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="transactionDescription" placeholder="أدخل وصف التحويل">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="transactionDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="transactionCurrency">
+                                <option selected>ريال يمني</option>
+                                <option>ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="transactionAmount" placeholder="أدخل المبلغ">
+                        </div>
+                        
+                        <div id="fromAccountField" class="mb-3 d-none">
+                            <label class="form-label">من الحساب</label>
+                            <select class="form-select" id="fromAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div id="toAccountField" class="mb-3 d-none">
+                            <label class="form-label">إلى الحساب</label>
+                            <select class="form-select" id="toAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div id="categoryField" class="mb-3 d-none">
+                            <label class="form-label">الفئة</label>
+                            <select class="form-select" id="transactionCategory">
+                                <option selected>اختر الفئة</option>
+                                <!-- Categories will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="transactionNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveTransactionBtn">حفظ المعاملة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Transaction Modal -->
+    <div class="modal fade" id="editTransactionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل معاملة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editTransactionId">
+                        <input type="hidden" id="editTransactionType">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="editTransactionDescription" placeholder="أدخل وصف المعاملة">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="editTransactionDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="editTransactionCurrency">
+                                <option value="YER">ريال يمني</option>
+                                <option value="SAR">ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="editTransactionAmount" placeholder="أدخل المبلغ">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الحساب</label>
+                            <select class="form-select" id="editTransactionAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div id="editTransactionCategoryField" class="mb-3">
+                            <label class="form-label">الفئة</label>
+                            <select class="form-select" id="editTransactionCategory">
+                                <!-- Categories will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editTransactionNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateTransactionBtn">تحديث المعاملة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Income Modal -->
+    <div class="modal fade" id="addIncomeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة إيراد جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">مصدر الإيراد</label>
+                            <select class="form-select" id="incomeSource">
+                                <option selected>اختر مصدر الإيراد</option>
+                                <!-- Income sources will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="incomeDescription" placeholder="أدخل وصف الإيراد">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="incomeDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="incomeCurrency">
+                                <option selected>ريال يمني</option>
+                                <option>ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="incomeAmount" placeholder="أدخل المبلغ">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الحساب</label>
+                            <select class="form-select" id="incomeAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="incomeNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveIncomeBtn">حفظ الإيراد</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Income Modal -->
+    <div class="modal fade" id="editIncomeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل إيراد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editIncomeId">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">مصدر الإيراد</label>
+                            <select class="form-select" id="editIncomeSource">
+                                <!-- Income sources will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="editIncomeDescription" placeholder="أدخل وصف الإيراد">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="editIncomeDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="editIncomeCurrency">
+                                <option value="YER">ريال يمني</option>
+                                <option value="SAR">ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="editIncomeAmount" placeholder="أدخل المبلغ">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الحساب</label>
+                            <select class="form-select" id="editIncomeAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editIncomeNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateIncomeBtn">تحديث الإيراد</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Expense Modal -->
+    <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مصروف جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">فئة المصروف</label>
+                            <select class="form-select" id="expenseCategory">
+                                <option selected>اختر فئة المصروف</option>
+                                <!-- Expense categories will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="expenseDescription" placeholder="أدخل وصف المصروف">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="expenseDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="expenseCurrency">
+                                <option selected>ريال يمني</option>
+                                <option>ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="expenseAmount" placeholder="أدخل المبلغ">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الحساب</label>
+                            <select class="form-select" id="expenseAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="expenseNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveExpenseBtn">حفظ المصروف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Expense Modal -->
+    <div class="modal fade" id="editExpenseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل مصروف</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editExpenseId">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">فئة المصروف</label>
+                            <select class="form-select" id="editExpenseCategory">
+                                <!-- Expense categories will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="editExpenseDescription" placeholder="أدخل وصف المصروف">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="editExpenseDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="editExpenseCurrency">
+                                <option value="YER">ريال يمني</option>
+                                <option value="SAR">ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="editExpenseAmount" placeholder="أدخل المبلغ">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الحساب</label>
+                            <select class="form-select" id="editExpenseAccount">
+                                <option selected>اختر الحساب</option>
+                                <!-- Accounts will be dynamically added here -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editExpenseNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateExpenseBtn">تحديث المصروف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Income Category Modal -->
+    <div class="modal fade" id="addIncomeCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة تصنيف إيرادات جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" class="form-control" id="incomeCategoryName" placeholder="أدخل اسم التصنيف" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">اللون</label>
+                            <input type="color" class="form-control form-control-color" id="incomeCategoryColor" value="#198754">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <textarea class="form-control" id="incomeCategoryDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveIncomeCategoryBtn">حفظ التصنيف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Income Category Modal -->
+    <div class="modal fade" id="editIncomeCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل تصنيف الإيرادات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editIncomeCategoryId">
+                        <div class="mb-3">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" class="form-control" id="editIncomeCategoryName" placeholder="أدخل اسم التصنيف" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">اللون</label>
+                            <input type="color" class="form-control form-control-color" id="editIncomeCategoryColor">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <textarea class="form-control" id="editIncomeCategoryDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateIncomeCategoryBtn">تحديث التصنيف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Expense Category Modal -->
+    <div class="modal fade" id="addExpenseCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة تصنيف مصروفات جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" class="form-control" id="expenseCategoryName" placeholder="أدخل اسم التصنيف" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">اللون</label>
+                            <input type="color" class="form-control form-control-color" id="expenseCategoryColor" value="#dc3545">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <textarea class="form-control" id="expenseCategoryDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveExpenseCategoryBtn">حفظ التصنيف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Expense Category Modal -->
+    <div class="modal fade" id="editExpenseCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل تصنيف المصروفات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editExpenseCategoryId">
+                        <div class="mb-3">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" class="form-control" id="editExpenseCategoryName" placeholder="أدخل اسم التصنيف" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">اللون</label>
+                            <input type="color" class="form-control form-control-color" id="editExpenseCategoryColor">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <textarea class="form-control" id="editExpenseCategoryDescription" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateExpenseCategoryBtn">تحديث التصنيف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Debt Management Modals -->
+    <!-- Add Debt Customer Modal -->
+    <div class="modal fade" id="addDebtCustomerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة عميل جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">اسم العميل</label>
+                            <input type="text" class="form-control" id="debtCustomerName" placeholder="أدخل اسم العميل" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="debtCustomerPhone" placeholder="أدخل رقم الهاتف">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="debtCustomerEmail" placeholder="أدخل البريد الإلكتروني">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">العنوان</label>
+                            <textarea class="form-control" id="debtCustomerAddress" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="debtCustomerNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveDebtCustomerBtn">حفظ العميل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Debt Customer Modal -->
+    <div class="modal fade" id="editDebtCustomerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل بيانات العميل</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editDebtCustomerId">
+                        <div class="mb-3">
+                            <label class="form-label">اسم العميل</label>
+                            <input type="text" class="form-control" id="editDebtCustomerName" placeholder="أدخل اسم العميل" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="editDebtCustomerPhone" placeholder="أدخل رقم الهاتف">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="editDebtCustomerEmail" placeholder="أدخل البريد الإلكتروني">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">العنوان</label>
+                            <textarea class="form-control" id="editDebtCustomerAddress" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editDebtCustomerNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateDebtCustomerBtn">تحديث العميل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Debt Transaction Modal -->
+    <div class="modal fade" id="addDebtTransactionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة معاملة دين جديدة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="debtTransactionCustomerId">
+                        <div class="mb-3">
+                            <label class="form-label">نوع المعاملة</label>
+                            <select class="form-select" id="debtTransactionType">
+                                <option selected>اختر نوع المعاملة</option>
+                                <option value="owed">دين لي (مستحق القبض)</option>
+                                <option value="owe">دين عندي (مستحقة الدفع)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="debtTransactionDescription" placeholder="أدخل وصف المعاملة" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="debtTransactionDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="debtTransactionCurrency">
+                                <option selected>ريال يمني</option>
+                                <option>ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="debtTransactionAmount" placeholder="أدخل المبلغ" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">تاريخ الاستحقاق</label>
+                            <input type="date" class="form-control" id="debtTransactionDueDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="debtTransactionNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveDebtTransactionBtn">حفظ المعاملة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Debt Transaction Modal -->
+    <div class="modal fade" id="editDebtTransactionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل معاملة الدين</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editDebtTransactionId">
+                        <input type="hidden" id="editDebtTransactionCustomerId">
+                        <div class="mb-3">
+                            <label class="form-label">نوع المعاملة</label>
+                            <select class="form-select" id="editDebtTransactionType">
+                                <option value="owed">دين لي (مستحق القبض)</option>
+                                <option value="owe">دين عندي (مستحقة الدفع)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="editDebtTransactionDescription" placeholder="أدخل وصف المعاملة" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="editDebtTransactionDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">العملة</label>
+                            <select class="form-select" id="editDebtTransactionCurrency">
+                                <option value="YER">ريال يمني</option>
+                                <option value="SAR">ريال سعودي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ</label>
+                            <input type="number" class="form-control" id="editDebtTransactionAmount" placeholder="أدخل المبلغ" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">تاريخ الاستحقاق</label>
+                            <input type="date" class="form-control" id="editDebtTransactionDueDate">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">الحالة</label>
+                            <select class="form-select" id="editDebtTransactionStatus">
+                                <option value="pending">مستحق</option>
+                                <option value="paid">مدفوع</option>
+                                <option value="overdue">متأخر</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editDebtTransactionNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="updateDebtTransactionBtn">تحديث المعاملة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Debt Customer Details Modal -->
+    <div class="modal fade" id="debtCustomerDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="debtCustomerDetailsTitle">تفاصيل العميل</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="debtCustomerDetailsBody">
+                    <!-- Customer details will be dynamically loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    
+    <!-- Firebase Init -->
+    <script>
+      // Initialize Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyAl_ZKb22fC4h-3lV-QGlHFy6BYtW_eBa8",
+        authDomain: "amoaliapp.firebaseapp.com",
+        projectId: "amoaliapp",
+        storageBucket: "amoaliapp.firebasestorage.app",
+        messagingSenderId: "544882310161",
+        appId: "1:544882310161:web:8fc74ebc7bffac0d60c5b0",
+        measurementId: "G-BX4Z7XHS34"
+      };
+      
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      
+      // جعل db متاحة عالمياً
+      window.db = db;
+      
+      // التحقق من تهيئة Firebase
+      console.log('Firebase initialized:', firebase.app().name);
+      console.log('Firestore db:', db);
+    </script>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- XLSX for Excel export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('service-worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('service-worker registration failed:', error);
+        });
+    });
+  }
+</script>
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
